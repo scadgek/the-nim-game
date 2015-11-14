@@ -42,22 +42,17 @@ method init*(v: SticksView, r: Rect) =
             let y = (650 - bottom_indent + 25 * j + 10 * (j - 1)).toFloat
             let button = newButton(newRect(x, y, 100, 25))
             button.title = "Pick " & $j & " sticks"
-            case j:
-                of 1:
-                    let x = i
-                    button.onAction do():
-                        echo "Picking 1 stick from column " & $x
-                of 2:
-                    let x = i
-                    button.onAction do():
-                        echo "Picking 2 sticks from column " & $x
-                of 3:
-                    let x = i
-                    button.onAction do():
-                        echo "Picking 3 sticks from column " & $x
-                else:
-                    button.onAction do():
-                        echo "Impossible"
+            let column = i
+            let sticks = j
+            button.onAction do():
+                var num = 0
+                for k in countdown(high(sticksMatrix[column]), low(sticksMatrix[column])):
+                    if sticksMatrix[column][k].visible:
+                        sticksMatrix[column][k].visible = false
+                        num = num + 1
+                    if num >= sticks:
+                        break
+
             v.addSubview(button)
 
 method draw(v: SticksView, r: Rect) =
