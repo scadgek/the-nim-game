@@ -10,7 +10,7 @@ proc startApplication() =
 
     mainWindow.new()
 
-    mainWindow.init(newRect(40, 40, 900, 600))
+    mainWindow.init(newRect(40, 40, 1200, 600))
 
     mainWindow.title = "The Nim Game"
 
