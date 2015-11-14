@@ -1,0 +1,15 @@
+# Created by https://www.gitignore.io/api/nim,linux
+
+### Nim ###
+nimcache/
+
+
+### Linux ###
+*~
+
+# KDE directory preferences
+.directory
+
+# Linux trash folder which might appear on any partition or disk
+.Trash-*
+
