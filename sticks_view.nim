@@ -25,13 +25,13 @@ type SticksView* = ref object of View
 
 type Stick = tuple[x, y: float32, visible: bool]
 
-type SticksMatrix = array[0..num_columns-1, array[0..num_sticks-1, Stick]]
+type SticksMatrix = array[0..<num_columns, array[0..<num_sticks, Stick]]
 var sticksMatrix: SticksMatrix
 
 method init*(v: SticksView, r: Rect) =
     procCall v.View.init(r)
-    for i in 0..num_columns-1:
-        for j in 0..num_sticks-1:
+    for i in 0..<num_columns:
+        for j in 0..<num_sticks:
             var coordX = (side_indent + i * (stick_width + interstick_width)).toFloat
             var coordY = (650 - bottom_indent - j * (stick_height + interstick_height) - stick_height).toFloat
             var stick: Stick
