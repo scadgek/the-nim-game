@@ -1,7 +1,10 @@
 import nimx.view
 import nimx.image
+import nimx.button
 import nimx.context
 import nimx.render_to_image
+import nimx.animation
+import nimx.window
 
 const
     stick_height = 20
@@ -9,9 +12,9 @@ const
     stick_rounding = 10
     interstick_width = 100
     interstick_height = 10
-    bottom_indent = 50
+    bottom_indent = 150
     top_indent = 100
-    side_indent = 200
+    side_indent = 150
 
 type SticksView* = ref object of View
     image: Image
@@ -19,9 +22,45 @@ type SticksView* = ref object of View
 type Stick = tuple[x, y: float32, visible: bool]
 
 type SticksMatrix = array[0..2, array[0..14, Stick]]
+var sticksMatrix: SticksMatrix
+
+method init*(v: SticksView, r: Rect) =
+    procCall v.View.init(r)
+    for i in 0..2:
+        for j in 0..14:
+            var coordX = (side_indent + i * (stick_width + interstick_width)).toFloat
+            var coordY = (650 - bottom_indent - j * (stick_height + interstick_height) - stick_height).toFloat
+            var stick: Stick
+            stick.x = coordX
+            stick.y = coordY
+            stick.visible = true
+            sticksMatrix[i][j] = stick
+
+    for i in 0..2:
+        for j in 1..3:
+            let x = sticksMatrix[i][j].x + toFloat(50)
+            let y = (650 - bottom_indent + 25 * j + 10 * (j - 1)).toFloat
+            let button = newButton(newRect(x, y, 100, 25))
+            button.title = "Pick " & $j & " sticks"
+            case j:
+                of 1:
+                    let x = i
+                    button.onAction do():
+                        echo "Picking 1 stick from column " & $x
+                of 2:
+                    let x = i
+                    button.onAction do():
+                        echo "Picking 2 sticks from column " & $x
+                of 3:
+                    let x = i
+                    button.onAction do():
+                        echo "Picking 3 sticks from column " & $x
+                else:
+                    button.onAction do():
+                        echo "Impossible"
+            v.addSubview(button)
 
 method draw(v: SticksView, r: Rect) =
-    var sticksMatrix: SticksMatrix
     for i in 0..2:
         for j in 0..14:
             let c = currentContext()
@@ -29,5 +68,6 @@ method draw(v: SticksView, r: Rect) =
             c.strokeColor = blackColor()
             c.strokeWidth = 3
             var coordX = (side_indent + i * (stick_width + interstick_width)).toFloat
-            var coordY = (600 - bottom_indent - j * (stick_height + interstick_height) - stick_height).toFloat
-            c.drawRoundedRect(newRect(coordX, coordY, stick_width, stick_height), stick_rounding)
+            var coordY = (650 - bottom_indent - j * (stick_height + interstick_height) - stick_height).toFloat
+            if sticksMatrix[i][j].visible:
+                c.drawRoundedRect(newRect(sticksMatrix[i][j].x, sticksMatrix[i][j].y, stick_width, stick_height), stick_rounding)
