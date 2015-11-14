@@ -40,7 +40,7 @@ method init*(v: SticksView, r: Rect) =
             stick.visible = true
             sticksMatrix[i][j] = stick
 
-    for i in 0..num_columns-1:
+    for i in 0..<num_columns:
         for j in min_pick_sticks..max_pick_sticks:
             let x = sticksMatrix[i][j].x + toFloat(50)
             let y = (650 - bottom_indent + 25 * j + 10 * (j - 1)).toFloat
@@ -60,8 +60,8 @@ method init*(v: SticksView, r: Rect) =
             v.addSubview(button)
 
 method draw(v: SticksView, r: Rect) =
-    for i in 0..num_columns-1:
-        for j in 0..num_sticks-1:
+    for i in 0..<num_columns:
+        for j in 0..<num_sticks:
             let c = currentContext()
             c.fillColor = newColor(1, 1, 0)
             c.strokeColor = blackColor()
