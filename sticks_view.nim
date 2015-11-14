@@ -25,7 +25,7 @@ type SticksView* = ref object of View
 
 type Stick = tuple[x, y: float32, visible: bool]
 
-type SticksMatrix = array[0..<num_columns, array[0..<num_sticks, Stick]]
+type SticksMatrix = array[num_columns, array[num_sticks, Stick]]
 var sticksMatrix: SticksMatrix
 
 method init*(v: SticksView, r: Rect) =
