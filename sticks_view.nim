@@ -15,19 +15,23 @@ const
     bottom_indent = 150
     top_indent = 100
     side_indent = 150
+    num_columns = 3
+    num_sticks = 15
+    max_pick_sticks = 3
+    min_pick_sticks = 1
 
 type SticksView* = ref object of View
     image: Image
 
 type Stick = tuple[x, y: float32, visible: bool]
 
-type SticksMatrix = array[0..2, array[0..14, Stick]]
+type SticksMatrix = array[0..num_columns-1, array[0..num_sticks-1, Stick]]
 var sticksMatrix: SticksMatrix
 
 method init*(v: SticksView, r: Rect) =
     procCall v.View.init(r)
-    for i in 0..2:
-        for j in 0..14:
+    for i in 0..num_columns-1:
+        for j in 0..num_sticks-1:
             var coordX = (side_indent + i * (stick_width + interstick_width)).toFloat
             var coordY = (650 - bottom_indent - j * (stick_height + interstick_height) - stick_height).toFloat
             var stick: Stick
@@ -36,8 +40,8 @@ method init*(v: SticksView, r: Rect) =
             stick.visible = true
             sticksMatrix[i][j] = stick
 
-    for i in 0..2:
-        for j in 1..3:
+    for i in 0..num_columns-1:
+        for j in min_pick_sticks..max_pick_sticks:
             let x = sticksMatrix[i][j].x + toFloat(50)
             let y = (650 - bottom_indent + 25 * j + 10 * (j - 1)).toFloat
             let button = newButton(newRect(x, y, 100, 25))
@@ -56,8 +60,8 @@ method init*(v: SticksView, r: Rect) =
             v.addSubview(button)
 
 method draw(v: SticksView, r: Rect) =
-    for i in 0..2:
-        for j in 0..14:
+    for i in 0..num_columns-1:
+        for j in 0..num_sticks-1:
             let c = currentContext()
             c.fillColor = newColor(1, 1, 0)
             c.strokeColor = blackColor()
