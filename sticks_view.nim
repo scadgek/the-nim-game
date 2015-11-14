@@ -53,7 +53,7 @@ method init*(v: SticksView, r: Rect) =
                 for k in countdown(high(sticksMatrix[column]), low(sticksMatrix[column])):
                     if sticksMatrix[column][k].visible:
                         sticksMatrix[column][k].visible = false
-                        num = num + 1
+                        inc(num)
                     if num >= sticks:
                         break
 
