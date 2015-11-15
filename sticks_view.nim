@@ -33,6 +33,15 @@ type Stick = tuple[x, y: float32, visible: bool]
 type SticksMatrix = array[num_columns, array[num_sticks, Stick]]
 var sticksMatrix: SticksMatrix
 
+proc randomNonEmptyColumn(): int =
+  var count = 0
+  result = random(num_columns)
+  while count < num_columns:
+    if sticksMatrix[result][0].visible:
+      break
+    result = (result + 1) mod num_columns
+    inc(count)
+
 proc checkEndGame(): bool =
   for i in 0..<num_columns:
     for j in 0..<num_sticks:
@@ -77,7 +86,10 @@ method init*(v: SticksView, r: Rect) =
               pickSticks(column, sticks)
               nextMove()
               setTimeout(1.toFloat, proc =
-                pickSticks(random(3), random(3))
+                let x = randomNonEmptyColumn()
+                let num = random(max_pick_sticks) + 1
+                pickSticks(x, num)
+                nextMove()
                 v.setNeedsDisplay()
               )
             v.addSubview(button)
