@@ -24,6 +24,7 @@ const
     num_sticks = 15
     max_pick_sticks = 3
     min_pick_sticks = 1
+    move_timeout = 1
 
 type SticksView* = ref object of View
     image: Image
@@ -59,8 +60,8 @@ proc pickSticks(column, sticks: int) =
         break
   if checkEndGame():
     echo currentPlayer(), " wins!"
-
-proc computerMove = pickSticks(random(3), random(3))
+  else:
+    nextMove()
 
 method init*(v: SticksView, r: Rect) =
     procCall v.View.init(r)
@@ -84,12 +85,11 @@ method init*(v: SticksView, r: Rect) =
             button.title = "Pick " & $j & " sticks"
             button.onAction do():
               pickSticks(column, sticks)
-              nextMove()
-              setTimeout(1.toFloat, proc =
+              # computer move
+              setTimeout(move_timeout.toFloat, proc =
                 let x = randomNonEmptyColumn()
                 let num = random(max_pick_sticks) + 1
                 pickSticks(x, num)
-                nextMove()
                 v.setNeedsDisplay()
               )
             v.addSubview(button)
