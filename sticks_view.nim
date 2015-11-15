@@ -6,6 +6,8 @@ import nimx.render_to_image
 import nimx.animation
 import nimx.window
 
+import state
+
 const
     stick_height = 20
     stick_width = 200
@@ -68,6 +70,7 @@ method init*(v: SticksView, r: Rect) =
             button.title = "Pick " & $j & " sticks"
             button.onAction do():
               pickSticks(column, sticks)
+              nextMove()
             v.addSubview(button)
 
 method draw(v: SticksView, r: Rect) =
