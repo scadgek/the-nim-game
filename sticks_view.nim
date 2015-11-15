@@ -51,15 +51,14 @@ method init*(v: SticksView, r: Rect) =
 
     for i in 0..<num_columns:
         for j in min_pick_sticks..max_pick_sticks:
-            let x = sticksMatrix[i][j].x + toFloat(50)
+            let x = sticksMatrix[i][j].x + 50.toFloat
             let y = (650 - bottom_indent + 25 * j + 10 * (j - 1)).toFloat
-            let button = newButton(newRect(x, y, 100, 25))
-            button.title = "Pick " & $j & " sticks"
             let column = i
             let sticks = j
+            let button = newButton(newRect(x, y, 100, 25))
+            button.title = "Pick " & $j & " sticks"
             button.onAction do():
-                pickSticks(column, sticks)
-
+              pickSticks(column, sticks)
             v.addSubview(button)
 
 method draw(v: SticksView, r: Rect) =
