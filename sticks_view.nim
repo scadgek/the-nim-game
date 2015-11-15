@@ -28,6 +28,15 @@ type Stick = tuple[x, y: float32, visible: bool]
 type SticksMatrix = array[num_columns, array[num_sticks, Stick]]
 var sticksMatrix: SticksMatrix
 
+proc pickSticks(column, sticks: int) =
+  var picked = 0
+  for k in countdown(high(sticksMatrix[column]), low(sticksMatrix[column])):
+      if sticksMatrix[column][k].visible:
+          sticksMatrix[column][k].visible = false
+          inc(picked)
+      if picked >= sticks:
+          break
+
 method init*(v: SticksView, r: Rect) =
     procCall v.View.init(r)
     for i in 0..<num_columns:
@@ -49,13 +58,7 @@ method init*(v: SticksView, r: Rect) =
             let column = i
             let sticks = j
             button.onAction do():
-                var num = 0
-                for k in countdown(high(sticksMatrix[column]), low(sticksMatrix[column])):
-                    if sticksMatrix[column][k].visible:
-                        sticksMatrix[column][k].visible = false
-                        inc(num)
-                    if num >= sticks:
-                        break
+                pickSticks(column, sticks)
 
             v.addSubview(button)
 
