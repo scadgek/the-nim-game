@@ -91,6 +91,7 @@ method init*(v: SticksView, r: Rect) =
             button.title = "Pick " & $j & " sticks"
             button.onAction do():
               pickSticks(column, sticks)
+              button.disable()
               if checkEndGame():
                 label.text = if currentPlayer() == Player:  "You win!" else: $currentPlayer() & "'s move"
               else:
@@ -107,6 +108,7 @@ method init*(v: SticksView, r: Rect) =
                   else:
                     nextMove()
                     label.text = if currentPlayer() == Player: "Your move" else: $currentPlayer() & "'s move"
+                  button.enable()
                   v.setNeedsDisplay()
                 )
             v.addSubview(button)
