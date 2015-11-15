@@ -1,4 +1,4 @@
-type Move = enum
+type Move* = enum
   Player, Computer, GameOver
 
 # not public, since it is unlikely to change game state directly

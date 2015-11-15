@@ -6,6 +6,7 @@ import nimx.render_to_image
 import nimx.animation
 import nimx.window
 import nimx.timer
+import nimx.text_field
 
 import math
 
@@ -64,13 +65,12 @@ proc pickSticks(column, sticks: int) =
         inc(picked)
     if picked >= sticks:
         break
-  if checkEndGame():
-    echo currentPlayer(), " wins!"
-  else:
-    nextMove()
 
 method init*(v: SticksView, r: Rect) =
     procCall v.View.init(r)
+    let label = newLabel(newRect(1100 div 2 - 50, 10, 100, 20))
+    label.text = "Your move"
+    v.addSubView(label)
     for i in 0..<num_columns:
         for j in 0..<num_sticks:
             var coordX = (side_indent + i * (stick_width + interstick_width)).toFloat
@@ -91,12 +91,22 @@ method init*(v: SticksView, r: Rect) =
             button.title = "Pick " & $j & " sticks"
             button.onAction do():
               pickSticks(column, sticks)
+              if checkEndGame():
+                label.text = if currentPlayer() == Player:  "You win!" else: $currentPlayer() & "'s move"
+              else:
+                nextMove()
+                label.text = if currentPlayer() == Player: "Your move" else: $currentPlayer() & "'s move"
               # computer move
               if not isGameOver():
                 setTimeout(move_timeout.toFloat, proc =
                   let x = randomNonEmptyColumn()
                   let num = if canWin(): max_pick_sticks else: random(max_pick_sticks) + 1
                   pickSticks(x, num)
+                  if checkEndGame():
+                    label.text = if currentPlayer() == Player:  "You win!" else: $currentPlayer() & "'s move"
+                  else:
+                    nextMove()
+                    label.text = if currentPlayer() == Player: "Your move" else: $currentPlayer() & "'s move"
                   v.setNeedsDisplay()
                 )
             v.addSubview(button)
