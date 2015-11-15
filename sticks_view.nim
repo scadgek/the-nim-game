@@ -5,6 +5,9 @@ import nimx.context
 import nimx.render_to_image
 import nimx.animation
 import nimx.window
+import nimx.timer
+
+import math
 
 import state
 
@@ -46,7 +49,9 @@ proc pickSticks(column, sticks: int) =
     if picked >= sticks:
         break
   if checkEndGame():
-    echo "WIN-WIN!"
+    echo currentPlayer(), " wins!"
+
+proc computerMove = pickSticks(random(3), random(3))
 
 method init*(v: SticksView, r: Rect) =
     procCall v.View.init(r)
@@ -71,6 +76,10 @@ method init*(v: SticksView, r: Rect) =
             button.onAction do():
               pickSticks(column, sticks)
               nextMove()
+              setTimeout(1.toFloat, proc =
+                pickSticks(random(3), random(3))
+                v.setNeedsDisplay()
+              )
             v.addSubview(button)
 
 method draw(v: SticksView, r: Rect) =

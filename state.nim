@@ -1,7 +1,8 @@
 type Move = enum
   Player, Computer
 
-var current_move*: Move
+# not public, since it is unlikely to change game state directly
+var current_move: Move
 current_move = Player
 
 proc nextMove*() =
@@ -10,3 +11,6 @@ proc nextMove*() =
     current_move = Computer
   of Computer:
     current_move = Player
+
+proc currentPlayer*(): Move =
+  result = current_move
