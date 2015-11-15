@@ -28,14 +28,23 @@ type Stick = tuple[x, y: float32, visible: bool]
 type SticksMatrix = array[num_columns, array[num_sticks, Stick]]
 var sticksMatrix: SticksMatrix
 
+proc checkEndGame(): bool =
+  for i in 0..<num_columns:
+    for j in 0..<num_sticks:
+      if sticksMatrix[i][j].visible:
+        return false
+  return true
+
 proc pickSticks(column, sticks: int) =
   var picked = 0
   for k in countdown(high(sticksMatrix[column]), low(sticksMatrix[column])):
-      if sticksMatrix[column][k].visible:
-          sticksMatrix[column][k].visible = false
-          inc(picked)
-      if picked >= sticks:
-          break
+    if sticksMatrix[column][k].visible:
+        sticksMatrix[column][k].visible = false
+        inc(picked)
+    if picked >= sticks:
+        break
+  if checkEndGame():
+    echo "WIN-WIN!"
 
 method init*(v: SticksView, r: Rect) =
     procCall v.View.init(r)
