@@ -35,6 +35,20 @@ type Stick = tuple[x, y: float32, visible: bool]
 type SticksMatrix = array[num_columns, array[num_sticks, Stick]]
 var sticksMatrix: SticksMatrix
 
+type Buttons = array[num_columns, array[min_pick_sticks..max_pick_sticks, Button]]
+var allButtons: Buttons
+
+proc disableAllButtons() =
+  for i in 0..<num_columns:
+    for j in min_pick_sticks..max_pick_sticks:
+      allButtons[i][j].disable()
+
+proc enableAllButtons() =
+  for i in 0..<num_columns:
+    if sticksMatrix[i][0].visible:
+      for j in min_pick_sticks..max_pick_sticks:
+        allButtons[i][j].enable()
+
 proc canWin(): bool =
   var nonEmptyColumns = num_columns
   for i in 0..<num_columns:
@@ -91,7 +105,7 @@ method init*(v: SticksView, r: Rect) =
             button.title = "Pick " & $j & " sticks"
             button.onAction do():
               pickSticks(column, sticks)
-              button.disable()
+              disableAllButtons()
               if checkEndGame():
                 label.text = if currentPlayer() == Player:  "You win!" else: $currentPlayer() & "'s move"
               else:
@@ -108,10 +122,11 @@ method init*(v: SticksView, r: Rect) =
                   else:
                     nextMove()
                     label.text = if currentPlayer() == Player: "Your move" else: $currentPlayer() & "'s move"
-                  button.enable()
+                  enableAllButtons()
                   v.setNeedsDisplay()
                 )
             v.addSubview(button)
+            allButtons[i][j] = button
 
 method draw(v: SticksView, r: Rect) =
     for i in 0..<num_columns:
